@@ -1,0 +1,19 @@
+.header {
+  width: 30em;
+  height: 5rem;
+  color: #fff;
+  background-color: #333a;
+  position: sticky;
+  margin: 1rem auto;
+  border-radius: 2rem;
+  z-index: 100;
+  text-align: center;
+}
+
+.title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  line-height: 2.7rem;
+}
