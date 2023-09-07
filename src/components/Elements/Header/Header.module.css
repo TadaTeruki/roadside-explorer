@@ -1,13 +1,14 @@
 .header {
-  width: 30em;
-  height: 5rem;
-  color: #fff;
-  background-color: #333a;
+  width: 25em;
+  height: 4.5rem;
+  color: #555;
+  background-color: #fffd;
   position: sticky;
   margin: 1rem auto;
-  border-radius: 2rem;
+  border-radius: 1rem;
   z-index: 100;
   text-align: center;
+  box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.1);
 }
 
 .title {
@@ -15,5 +16,9 @@
   font-weight: 700;
   margin: 0;
   padding: 0;
-  line-height: 2.7rem;
+  line-height: 2.75rem;
+}
+
+.subtitle {
+    font-size: 0.8rem;
 }

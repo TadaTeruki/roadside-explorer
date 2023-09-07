@@ -14,10 +14,6 @@ const hullId = (level: number) => {
   return "hulls_" + level;
 };
 
-const getLevelFromHullId = (hullId: string) => {
-  return parseInt(hullId.split("_")[1]);
-};
-
 const createHullLayers = (dataRoadSide: RoadSideData, level: number) => {
   if (level >= dataRoadSide.hull_levels) {
     return <></>;
@@ -99,14 +95,12 @@ export const MapView = (props: { dataRoadSide: RoadSideData }) => {
     return ids;
   })();
 
-  const maxLevel = props.dataRoadSide.hulls.length - 1;
-
   return (
     <Map
       initialViewState={{
         longitude: 139.7,
         latitude: 35.7,
-        zoom: 7,
+        zoom: 6,
       }}
       style={{ width: "100vw", height: "100vh" }}
       mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
@@ -128,8 +122,6 @@ export const MapView = (props: { dataRoadSide: RoadSideData }) => {
         const target = e.features[0];
         if (!target) return;
         if (!target.properties) return;
-
-        const hullId = getLevelFromHullId(target.layer.id);
 
         const center = JSON.parse(target.properties.center);
         const address = JSON.parse(target.properties.address);
