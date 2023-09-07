@@ -2,3 +2,11 @@
   font-size: smaller;
   color: #666;
 }
+
+.roadname {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  line-height: 1.4rem;
+}

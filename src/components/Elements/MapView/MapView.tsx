@@ -82,6 +82,7 @@ export const MapView = (props: { dataRoadSide: RoadSideData }) => {
   const [hoverHullLayer, setHoverHullLayer] = useState({} as MapGeoJSONFeature);
   const [hullInfo, setHullInfo] = useState({} as HullInfo);
   const [showPopup, setShowPopup] = useState(false);
+  const [showHoverPopup, setShowHoverPopup] = useState(false);
 
   const hullLayers = props.dataRoadSide.hulls.map((_, level) => {
     return createHullLayers(props.dataRoadSide, level);
@@ -98,22 +99,30 @@ export const MapView = (props: { dataRoadSide: RoadSideData }) => {
   return (
     <Map
       initialViewState={{
-        longitude: 139.7,
-        latitude: 35.7,
-        zoom: 6,
+        longitude: 139.82457942811905,
+        latitude: 35.8796521668946,
+        zoom: 8,
+        pitch: 7.5,
       }}
       style={{ width: "100vw", height: "100vh" }}
       mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
       interactiveLayerIds={props.dataRoadSide.hulls.length === 0 ? [] : hullIds}
       onMouseMove={(e) => {
+        setShowHoverPopup(false);
         if (!e.features) return;
         const target = e.features[0];
         if (target === hoverHullLayer) return;
         setHoverHullLayer({} as MapGeoJSONFeature);
         if (!target) return;
         if (!target.properties) return;
-        if (JSON.parse(target.properties.roadnames)[0] == "") return;
+        const mainRoad = target.properties.mainRoad;
+        const focusMainRoad = (function () {
+          if (focusHullLayer.properties == undefined) return "";
+          return focusHullLayer.properties.mainRoad;
+        })();
+        if (mainRoad == "" || mainRoad == focusMainRoad) return;
         setHoverHullLayer(target);
+        setShowHoverPopup(true);
       }}
       onClick={(e) => {
         setShowPopup(false);
@@ -143,19 +152,38 @@ export const MapView = (props: { dataRoadSide: RoadSideData }) => {
         setHullInfo(hullInfo);
         setFocusHullLayer(target);
         setShowPopup(true);
+        setHoverHullLayer({} as MapGeoJSONFeature);
       }}
     >
+      {showHoverPopup && hoverHullLayer.properties && (
+        <Popup
+          longitude={JSON.parse(hoverHullLayer.properties.center)[0]}
+          latitude={JSON.parse(hoverHullLayer.properties.center)[1]}
+          anchor="bottom"
+          onClose={() => {
+            setHoverHullLayer({} as MapGeoJSONFeature);
+            setShowHoverPopup(false);
+          }}
+          closeButton={false}
+          closeOnClick={false}
+        >
+          {hoverHullLayer.properties.mainRoad}
+          <div className={styles.detail}>クリックして詳細を表示</div>
+        </Popup>
+      )}
       {showPopup && (
         <Popup
           longitude={focusCoord.longitude}
           latitude={focusCoord.latitude}
           anchor="bottom"
           onClose={() => {
+            setFocusHullLayer({} as MapGeoJSONFeature);
             setShowPopup(false);
           }}
-          closeButton={false}
           closeOnClick={false}
         >
+          <div className={styles.roadname}>{hullInfo.roadnames[0]}</div>
+          <br />
           <strong>中心地域</strong>
           <br />
           <span className={styles.detail}>
