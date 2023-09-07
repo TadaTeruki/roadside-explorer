@@ -12,7 +12,7 @@ function App() {
     hull_levels: 0,
   } as RoadSideData);
   useEffect(() => {
-    LoadRoadSideData("/public/data/", "roadside_hull").then((data) => {
+    LoadRoadSideData("/data/", "roadside_hull").then((data) => {
       setDataRoadSide(data);
     });
   }, []);
