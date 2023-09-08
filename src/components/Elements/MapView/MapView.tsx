@@ -9,6 +9,7 @@ import { RoadSideData } from "../../../model/Container";
 import { useState } from "react";
 import { HullInfo } from "../../../model/Hull";
 import styles from "./MapView.module.css";
+import { Config } from "../../../model/Config";
 
 const hullId = (level: number) => {
   return "hulls_" + level;
@@ -79,13 +80,22 @@ const createHullLayers = (dataRoadSide: RoadSideData, level: number) => {
   );
 };
 
-export const MapView = (props: { dataRoadSide: RoadSideData }) => {
+type PopupAddress = {
+  "0": string;
+  "1": string;
+};
+
+export const MapView = (props: {
+  dataRoadSide: RoadSideData;
+  config: Config;
+}) => {
   const [focusCoord, setFocusCoord] = useState({ longitude: 0, latitude: 0 });
   const [focusHullLayer, setFocusHullLayer] = useState({} as MapGeoJSONFeature);
   const [hoverHullLayer, setHoverHullLayer] = useState({} as MapGeoJSONFeature);
   const [hullInfo, setHullInfo] = useState({} as HullInfo);
   const [showPopup, setShowPopup] = useState(false);
   const [showHoverPopup, setShowHoverPopup] = useState(false);
+  const [popupAddress, setPopupAddress] = useState({} as PopupAddress);
 
   const hullLayers = props.dataRoadSide.hulls.map((_, level) => {
     return createHullLayers(props.dataRoadSide, level);
@@ -94,7 +104,7 @@ export const MapView = (props: { dataRoadSide: RoadSideData }) => {
   let hullIds = (function () {
     let ids: string[] = [];
     for (let i = 0; i < props.dataRoadSide.hulls.length; i++) {
-      ids.push(hullId(i)+"_main");
+      ids.push(hullId(i) + "_main");
     }
     return ids;
   })();
@@ -136,7 +146,6 @@ export const MapView = (props: { dataRoadSide: RoadSideData }) => {
         if (!target.properties) return;
 
         const center = JSON.parse(target.properties.center);
-        const address = JSON.parse(target.properties.address);
         const roadnames = JSON.parse(target.properties.roadnames);
 
         if (roadnames[0] == "") return;
@@ -148,7 +157,6 @@ export const MapView = (props: { dataRoadSide: RoadSideData }) => {
 
         const hullInfo = {
           center: center,
-          address: address,
           roadnames: roadnames,
         } as HullInfo;
 
@@ -156,6 +164,25 @@ export const MapView = (props: { dataRoadSide: RoadSideData }) => {
         setFocusHullLayer(target);
         setShowPopup(true);
         setHoverHullLayer({} as MapGeoJSONFeature);
+        setPopupAddress({ "0": "", "1": "" });
+        const url =
+          "/reversegeocoding/?lat=" +
+          center[1] +
+          "&lon=" +
+          center[0] +
+          "&appid=" +
+          props.config.yolpApiKey +
+          "&output=json";
+        fetch(url).then((res) => {
+          res.json().then((data) => {
+            setPopupAddress({
+              "0":
+                data.Feature[0].Property.AddressElement[0].Name +
+                data.Feature[0].Property.AddressElement[1].Name,
+              "1": data.Feature[0].Property.AddressElement[2].Name,
+            });
+          });
+        });
       }}
     >
       {showHoverPopup && hoverHullLayer.properties && (
@@ -189,11 +216,14 @@ export const MapView = (props: { dataRoadSide: RoadSideData }) => {
           <br />
           <strong>中心地域</strong>
           <br />
-          <span className={styles.detail}>
-            {hullInfo.address[0]}
-            {hullInfo.address[1]}
-          </span>{" "}
-          {hullInfo.address[2]}
+          {popupAddress["0"] == "" ? (
+            <span className={styles.detail}>"読み込み中..." </span>
+          ) : (
+            <>
+              <span className={styles.detail}>{popupAddress["0"]}</span>{" "}
+              {popupAddress["1"]}
+            </>
+          )}
           <br />
           <br />
           <strong>主要道路</strong>
