@@ -18,7 +18,6 @@ const createHullLayers = (dataRoadSide: RoadSideData, level: number) => {
   if (level >= dataRoadSide.hull_levels) {
     return <></>;
   }
-  const opacity = 0.03;
   return (
     <div key={level}>
       <Source
@@ -26,7 +25,9 @@ const createHullLayers = (dataRoadSide: RoadSideData, level: number) => {
         type="geojson"
         data={{
           type: "FeatureCollection",
-          features: dataRoadSide.hulls[level],
+          features: dataRoadSide.hulls[level].filter((hull) => {
+            return !hull.properties.hasroad;
+          }),
         }}
       >
         <Layer
@@ -35,7 +36,7 @@ const createHullLayers = (dataRoadSide: RoadSideData, level: number) => {
           source={"roadside_" + level}
           paint={{
             "fill-color": "red",
-            "fill-opacity": opacity,
+            "fill-opacity": 0.03,
           }}
         />
       </Source>
@@ -55,7 +56,7 @@ const createHullLayers = (dataRoadSide: RoadSideData, level: number) => {
           source={"roadside_" + level}
           paint={{
             "fill-color": "red",
-            "fill-opacity": 0.2,
+            "fill-opacity": 0.25,
           }}
         />
         <Layer
@@ -68,7 +69,9 @@ const createHullLayers = (dataRoadSide: RoadSideData, level: number) => {
             "text-size": 12,
           }}
           paint={{
-            "text-color": "#533",
+            "text-color": "#622",
+            "text-halo-width": 1,
+            "text-halo-color": "#fafafa",
           }}
         />
       </Source>
@@ -91,7 +94,7 @@ export const MapView = (props: { dataRoadSide: RoadSideData }) => {
   let hullIds = (function () {
     let ids: string[] = [];
     for (let i = 0; i < props.dataRoadSide.hulls.length; i++) {
-      ids.push(hullId(i));
+      ids.push(hullId(i)+"_main");
     }
     return ids;
   })();
@@ -101,11 +104,11 @@ export const MapView = (props: { dataRoadSide: RoadSideData }) => {
       initialViewState={{
         longitude: 139.82457942811905,
         latitude: 35.8796521668946,
-        zoom: 8,
+        zoom: 5,
         pitch: 7.5,
       }}
       style={{ width: "100vw", height: "100vh" }}
-      mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+      mapStyle="https://tile.openstreetmap.jp/styles/maptiler-basic-ja/style.json"
       interactiveLayerIds={props.dataRoadSide.hulls.length === 0 ? [] : hullIds}
       onMouseMove={(e) => {
         setShowHoverPopup(false);
@@ -168,7 +171,7 @@ export const MapView = (props: { dataRoadSide: RoadSideData }) => {
           closeOnClick={false}
         >
           {hoverHullLayer.properties.mainRoad}
-          <div className={styles.detail}>クリックして詳細を表示</div>
+          <div className={styles.detail}>選択して詳細を表示</div>
         </Popup>
       )}
       {showPopup && (
