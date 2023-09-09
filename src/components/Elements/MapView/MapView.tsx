@@ -114,8 +114,7 @@ export const MapView = (props: {
       initialViewState={{
         longitude: 139.82457942811905,
         latitude: 35.8796521668946,
-        zoom: 5,
-        pitch: 7.5,
+        zoom: 6,
       }}
       style={{ width: "100vw", height: "100vh" }}
       mapStyle="https://tile.openstreetmap.jp/styles/maptiler-basic-ja/style.json"
@@ -217,7 +216,7 @@ export const MapView = (props: {
           <strong>中心地域</strong>
           <br />
           {popupAddress["0"] == "" ? (
-            <span className={styles.detail}>"読み込み中..." </span>
+            <span className={styles.detail}>読み込み中... </span>
           ) : (
             <>
               <span className={styles.detail}>{popupAddress["0"]}</span>{" "}

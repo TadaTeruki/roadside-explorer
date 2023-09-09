@@ -5,7 +5,6 @@ import MapView from "./components/Elements/MapView/MapView";
 import { LoadRoadSideData, RoadSideData } from "./model/Container";
 import Header from "./components/Elements/Header/Header";
 import { initConfig } from "./model/Config";
-import Credit from "./components/Elements/Credit/Credit";
 
 function App() {
   let [dataRoadSide, setDataRoadSide] = useState({
@@ -27,7 +26,6 @@ function App() {
       <MainContainer>
         <MapView dataRoadSide={dataRoadSide} config={config} />
       </MainContainer>
-      <Credit />
     </>
   );
 }
