@@ -80,11 +80,6 @@ const createHullLayers = (dataRoadSide: RoadSideData, level: number) => {
   );
 };
 
-type PopupAddress = {
-  "0": string;
-  "1": string;
-};
-
 export const MapView = (props: {
   dataRoadSide: RoadSideData;
   config: Config;
