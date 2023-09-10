@@ -95,7 +95,6 @@ export const MapView = (props: {
   const [hullInfo, setHullInfo] = useState({} as HullInfo);
   const [showPopup, setShowPopup] = useState(false);
   const [showHoverPopup, setShowHoverPopup] = useState(false);
-  const [popupAddress, setPopupAddress] = useState({} as PopupAddress);
 
   const hullLayers = props.dataRoadSide.hulls.map((_, level) => {
     return createHullLayers(props.dataRoadSide, level);
@@ -109,6 +108,35 @@ export const MapView = (props: {
     return ids;
   })();
 
+  const mapOnClick = (e: any) => {
+    setShowPopup(false);
+
+    if (!e.features) return;
+    const target = e.features[0];
+    if (!target) return;
+    if (!target.properties) return;
+
+    const center = JSON.parse(target.properties.center);
+    const roadnames = JSON.parse(target.properties.roadnames);
+
+    if (roadnames[0] == "") return;
+
+    setFocusCoord({
+      longitude: center[0],
+      latitude: center[1],
+    });
+
+    const hullInfo = {
+      center: center,
+      roadnames: roadnames,
+    } as HullInfo;
+
+    setHullInfo(hullInfo);
+    setFocusHullLayer(target);
+    setShowPopup(true);
+    setHoverHullLayer({} as MapGeoJSONFeature);
+  };
+
   return (
     <Map
       initialViewState={{
@@ -116,7 +144,7 @@ export const MapView = (props: {
         latitude: 35.8796521668946,
         zoom: 6,
       }}
-      style={{ width: "100vw", height: "100vh" }}
+      style={{ width: "100vw", height: "100%" }}
       mapStyle="https://tile.openstreetmap.jp/styles/maptiler-basic-ja/style.json"
       interactiveLayerIds={props.dataRoadSide.hulls.length === 0 ? [] : hullIds}
       onMouseMove={(e) => {
@@ -136,53 +164,8 @@ export const MapView = (props: {
         setHoverHullLayer(target);
         setShowHoverPopup(true);
       }}
-      onClick={(e) => {
-        setShowPopup(false);
-
-        if (!e.features) return;
-        const target = e.features[0];
-        if (!target) return;
-        if (!target.properties) return;
-
-        const center = JSON.parse(target.properties.center);
-        const roadnames = JSON.parse(target.properties.roadnames);
-
-        if (roadnames[0] == "") return;
-
-        setFocusCoord({
-          longitude: center[0],
-          latitude: center[1],
-        });
-
-        const hullInfo = {
-          center: center,
-          roadnames: roadnames,
-        } as HullInfo;
-
-        setHullInfo(hullInfo);
-        setFocusHullLayer(target);
-        setShowPopup(true);
-        setHoverHullLayer({} as MapGeoJSONFeature);
-        setPopupAddress({ "0": "", "1": "" });
-        const url =
-          "/reversegeocoding/?lat=" +
-          center[1] +
-          "&lon=" +
-          center[0] +
-          "&appid=" +
-          props.config.yolpApiKey +
-          "&output=json";
-        fetch(url).then((res) => {
-          res.json().then((data) => {
-            setPopupAddress({
-              "0":
-                data.Feature[0].Property.AddressElement[0].Name +
-                data.Feature[0].Property.AddressElement[1].Name,
-              "1": data.Feature[0].Property.AddressElement[2].Name,
-            });
-          });
-        });
-      }}
+      onTouchEnd={mapOnClick}
+      onClick={mapOnClick}
     >
       {showHoverPopup && hoverHullLayer.properties && (
         <Popup
@@ -212,18 +195,6 @@ export const MapView = (props: {
           closeOnClick={false}
         >
           <div className={styles.roadname}>{hullInfo.roadnames[0]}</div>
-          <br />
-          <strong>中心地域</strong>
-          <br />
-          {popupAddress["0"] == "" ? (
-            <span className={styles.detail}>読み込み中... </span>
-          ) : (
-            <>
-              <span className={styles.detail}>{popupAddress["0"]}</span>{" "}
-              {popupAddress["1"]}
-            </>
-          )}
-          <br />
           <br />
           <strong>主要道路</strong>
           <br />

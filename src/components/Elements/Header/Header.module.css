@@ -1,6 +1,5 @@
 .header {
   width: 100vw;
-  height: 2.5rem;
   line-height: 2.5rem;
   color: #fafafa;
   background-color: #2223;
@@ -8,6 +7,8 @@
   z-index: 100;
   box-shadow: 0 0 2rem 0 #0001;
   display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 a {
@@ -23,22 +24,47 @@ a:hover {
 .title {
   font-size: 1.4rem;
   margin-right: 1rem;
+  white-space: nowrap;
 }
 
 .subtitle {
   font-size: 0.8rem;
 }
 
-
 .headerLeft {
-  flex: 1;
   text-align: left;
   padding: 0 2rem;
+  flex: 1;
 }
 
 .headerRight {
-  flex: 1;
   text-align: right;
   padding: 0 1rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.headerContent {
+  margin: 0 1rem;
+}
+
+@media (max-width: 1000px) {
+  .subtitle {
+    display: none;
+  }
+
+  .headerLeft {
+    text-align: center;
+  }
+
+  .headerRight {
+    display: flex;
+    justify-content: space-around;
+    margin: 0;
+  }
+
+  .headerContent {
+    margin: 0;
+  }
 }
