@@ -22,7 +22,7 @@ amenity=fast_food | amenity=pharmacy | shop=car | shop=supermarket | shop=bakery
 
 3. 属性`brand=*`を持つ (`shop=mall`等、大規模商業施設は例外)
 
-これに基づいて作成されたOverpassのクエリは、[gistsにて共有しています](https://gist.github.com/TadaTeruki/db136753c7d10d95b0019c2a6ece32cd)。
+これに基づいて作成されたOverpassのクエリは、[gistとして共有しています](https://gist.github.com/TadaTeruki/db136753c7d10d95b0019c2a6ece32cd)。
 
 ## 注意事項
 
