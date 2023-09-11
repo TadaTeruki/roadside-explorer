@@ -14,14 +14,15 @@
 [Overpass API](https://wiki.openstreetmap.org/wiki/Overpass_API)を用いて、以下のようなクエリに基づいてロードサイド店舗を抽出しています:
 
 1. 日本国内の建築物である
+
 2. 属性`amenity=*`または`shop=*`を持ち、紐付けられた店の種類がロードサイドに多いものとして以下のリスト中に存在している
 ```
 amenity=fast_food | amenity=pharmacy | shop=car | shop=supermarket | shop=bakery | shop=hairdresser | amenity=cafe | amenity=restaurant | shop=beauty | shop=clothes | shop=alcohol | shop=butcher | shop=electronics | amenity=bakery | amenity=bank | shop=hardware | shop=jewelry | amenity=clinic | shop=shoes | shop=florist | shop=mobile_phone | shop=optician | shop=toys | shop=furniture | shop=bookstore | amenity=bar | shop=bicycle | shop=sports | shop=stationery | shop=department_store | shop=mall
 ```
+
 3. 属性`brand=*`を持つ (`shop=mall`等、大規模商業施設は例外)
 
-これに基づいて作成されたOverpassのクエリは、gistsにて共有しています: 
-https://gist.github.com/TadaTeruki/db136753c7d10d95b0019c2a6ece32cd
+これに基づいて作成されたOverpassのクエリは、[gistsにて共有しています](https://gist.github.com/TadaTeruki/db136753c7d10d95b0019c2a6ece32cd)。
 
 ## 注意事項
 
