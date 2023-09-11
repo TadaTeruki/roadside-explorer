@@ -30,4 +30,4 @@ amenity=fast_food | amenity=pharmacy | shop=car | shop=supermarket | shop=bakery
 
 ## 謝辞
 
-この地図は[MIERUNE Inc.](https://www.mierune.co.jp/)インターンシップにて、成果物として開発したものです。
+この地図は[MIERUNE Inc.](https://www.mierune.co.jp/)インターンシップにて、成果物として開発したものです。開発の援助やデータ作成など幅広く貢献いただいた[井口奏大](https://github.com/Kanahiro)氏をはじめ、MIERUNE Inc.の皆様に様々なご協力を承りました。
