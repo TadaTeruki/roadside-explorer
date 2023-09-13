@@ -4,7 +4,7 @@
 
 日本国内のロードサイド店舗・大規模商業施設の集まる地域を推定し、地図上に描画します。
 
-![Screenshot 2023-09-11 at 09-48-09 Roadside Explorer](https://github.com/TadaTeruki/roadside-explorer/assets/69315285/911b71ae-edb4-4302-ba2d-996b9957aa37)
+![RoadsideExplorer](https://github.com/TadaTeruki/roadside-explorer/assets/69315285/907fafee-2ac0-4666-9280-e8a5ef8ac162)
 
 開発環境: Vite+React+TypeScript
 
